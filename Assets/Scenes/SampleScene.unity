@@ -498,6 +498,8 @@ GameObject:
   m_Component:
   - component: {fileID: 132306920}
   - component: {fileID: 132306921}
+  - component: {fileID: 132306922}
+  - component: {fileID: 132306923}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -535,6 +537,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyControl
   mainCamera: {fileID: 330585545}
   HPbar: {fileID: 1524951421}
+--- !u!114 &132306922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132306919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0547c75de7fd3974fb01775d0a2301c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAttribute
+  baseStats:
+    health: 5000
+    attack: 0
+    magicPower: 0
+    armor: 100
+    magicResistance: 100
+    armorPenetration: 0
+    magicPenetration: 0
+    armorPenetrationRate: 0
+    magicPenetrationRate: 0
+    critRate: 0
+    critDamage: 0
+  currentWeapon: {fileID: 0}
+  finalStats:
+    health: 100
+    attack: 10
+    magicPower: 0
+    armor: 0
+    magicResistance: 0
+    armorPenetration: 0
+    magicPenetration: 0
+    armorPenetrationRate: 0
+    magicPenetrationRate: 0
+    critRate: 0
+    critDamage: 0
+--- !u!114 &132306923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132306919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d791fd9b9aa19824589275c55c25c6a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterCollider
+  characterColliders:
+  - {fileID: 703056304}
+  characterAttribute: {fileID: 132306922}
 --- !u!1 &251686291
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,6 +1000,8 @@ GameObject:
   - component: {fileID: 340706786}
   - component: {fileID: 340706788}
   - component: {fileID: 340706787}
+  - component: {fileID: 340706789}
+  - component: {fileID: 340706790}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1034,6 +1090,57 @@ MonoBehaviour:
   rotationSpeed: 15
   mainCamera: {fileID: 330585545}
   animator: {fileID: 340706786}
+--- !u!114 &340706789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340706784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0547c75de7fd3974fb01775d0a2301c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAttribute
+  baseStats:
+    health: 1000
+    attack: 20
+    magicPower: 20
+    armor: 100
+    magicResistance: 100
+    armorPenetration: 0
+    magicPenetration: 0
+    armorPenetrationRate: 0
+    magicPenetrationRate: 0
+    critRate: 500
+    critDamage: 0
+  currentWeapon: {fileID: 11400000, guid: 905130f9c65004944a4bf3035425f33c, type: 2}
+  finalStats:
+    health: 100
+    attack: 10
+    magicPower: 0
+    armor: 0
+    magicResistance: 0
+    armorPenetration: 0
+    magicPenetration: 0
+    armorPenetrationRate: 0
+    magicPenetrationRate: 0
+    critRate: 0
+    critDamage: 0
+--- !u!114 &340706790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340706784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d791fd9b9aa19824589275c55c25c6a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterCollider
+  characterColliders: []
+  characterAttribute: {fileID: 340706789}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1246,6 +1353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 517304834}
+  - component: {fileID: 517304835}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -1269,6 +1377,20 @@ Transform:
   - {fileID: 674791903}
   m_Father: {fileID: 340706785}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &517304835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517304833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c9fd65950a509e4a8a877eea54aafb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponController
+  weaponConfig: {fileID: 11400000, guid: 905130f9c65004944a4bf3035425f33c, type: 2}
+  weaponCollider: {fileID: 674791904}
 --- !u!1 &674791902
 GameObject:
   m_ObjectHideFlags: 0

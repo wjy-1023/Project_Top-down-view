@@ -1,0 +1,24 @@
+using UnityEngine;
+
+public class CharacterCollider : MonoBehaviour
+{
+    [Header("角色碰撞体")]
+    public Collider[] characterColliders;
+
+    [Header("角色属性")]
+    public CharacterAttribute characterAttribute;
+
+    void Awake()
+    {
+        // 自动获取自身及子物体的所有碰撞体
+        if (characterColliders == null || characterColliders.Length == 0)
+        {
+            characterColliders = GetComponentsInChildren<Collider>();
+        }
+
+        if (characterAttribute == null)
+        {
+            characterAttribute = GetComponent<CharacterAttribute>();
+        }
+    }
+}
