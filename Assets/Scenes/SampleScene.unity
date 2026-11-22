@@ -581,6 +581,7 @@ MonoBehaviour:
   moveSpeed: 5
   rotationSpeed: 15
   mainCamera: {fileID: 330585545}
+  animator: {fileID: 340706786}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

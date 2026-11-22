@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControl : MonoBehaviour
@@ -13,6 +14,9 @@ public class PlayerControl : MonoBehaviour
     [Header("摄像机")]
     public Camera mainCamera;
 
+    [Header("攻击参数")]
+    public Animator animator;
+
     private CharacterController controller;
 
     void Start()
@@ -23,12 +27,18 @@ public class PlayerControl : MonoBehaviour
         {
             mainCamera = Camera.main;
         }
+
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
     }
 
     void Update()
     {
         Move();
         RotateToMouse();
+        Attack();
     }
 
     // WASD 移动
@@ -88,5 +98,40 @@ public class PlayerControl : MonoBehaviour
                 );
             }
         }
+    }
+
+    // 鼠标左键攻击
+    void Attack()
+    {
+        if (Mouse.current == null || animator == null) return;
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            animator.SetTrigger("Attack");
+        }
+    }
+
+    public void OpenComboWindow()
+    {
+        animator.SetBool("Combo", true);
+    }
+
+    public void OnAttackEvent()
+    {
+        StartCoroutine(DelayedFunction());
+    }
+
+    IEnumerator DelayedFunction()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        // 0.5秒后执行
+        CloseComboWindow();
+    }
+
+    // 关闭连击窗口
+    public void CloseComboWindow()
+    {
+        animator.SetBool("Combo", false);
     }
 }
