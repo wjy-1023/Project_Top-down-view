@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class CharacterAttribute : MonoBehaviour
 {
-    [Header("角色基础属性")]
-    public CharacterStats baseStats = new CharacterStats();
+    [Header("角色配置")]
+    public CharacterConfig characterConfig;
 
     [Header("当前装备武器")]
     public WeaponConfig currentWeapon;
@@ -20,15 +20,23 @@ public class CharacterAttribute : MonoBehaviour
     // 刷新最终属性
     public void RefreshStats()
     {
-        finalStats = baseStats.Clone();
+        if (characterConfig == null)
+        {
+            Debug.LogWarning("没有配置角色数据！", this);
+            return;
+        }
 
+        // 复制角色基础属性
+        finalStats = characterConfig.stats.Clone();
+
+        // 累加武器属性
         if (currentWeapon != null)
         {
             finalStats.Add(currentWeapon.stats);
         }
     }
 
-    // 更换武器
+    // 装备武器
     public void EquipWeapon(WeaponConfig weapon)
     {
         currentWeapon = weapon;

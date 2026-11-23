@@ -10,7 +10,6 @@ public class WeaponController : MonoBehaviour
     [Header("武器碰撞体")]
     public Collider weaponCollider;
 
-    // 当前处于武器攻击范围内的角色
     private HashSet<CharacterCollider> targets =
         new HashSet<CharacterCollider>();
 
@@ -26,21 +25,32 @@ public class WeaponController : MonoBehaviour
             weaponCollider.isTrigger = true;
             weaponCollider.enabled = true;
         }
+        else
+        {
+            Debug.LogError("武器没有找到 Collider！");
+        }
     }
 
-    // 目标进入攻击范围
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("武器检测到碰撞体：" + other.name);
+
         CharacterCollider target =
             other.GetComponentInParent<CharacterCollider>();
 
         if (target != null)
         {
             targets.Add(target);
+            Debug.Log("检测到敌人：" + target.name);
+        }
+        else
+        {
+            Debug.LogWarning(
+                other.name + " 没有找到 CharacterCombat！"
+            );
         }
     }
 
-    // 目标离开攻击范围
     private void OnTriggerExit(Collider other)
     {
         CharacterCollider target =
@@ -49,19 +59,54 @@ public class WeaponController : MonoBehaviour
         if (target != null)
         {
             targets.Remove(target);
+            Debug.Log("敌人离开武器范围：" + target.name);
         }
     }
 
-    // Animation Event 调用：执行攻击判定
     public void AttackHit()
     {
+        Debug.Log("攻击事件触发，当前检测敌人数量：" + targets.Count);
+
+        if (weaponConfig == null)
+        {
+            Debug.LogWarning("没有配置武器！");
+            return;
+        }
+
+        CharacterAttribute attackerAttribute =
+            GetComponentInParent<CharacterAttribute>();
+
+        if (attackerAttribute == null)
+        {
+            Debug.LogWarning("没有找到攻击者属性！");
+            return;
+        }
+
         foreach (CharacterCollider target in targets)
         {
-            if (target == null) continue;
+            if (target == null || target.characterAttribute == null)
+                continue;
 
-            Debug.Log("命中目标：" + target.name);
+            bool isCritical;
 
-            // 后续在这里调用伤害计算系统
+            float damage = DamageCalculator.CalculateDamage(
+                attackerAttribute.finalStats,
+                target.characterAttribute.finalStats,
+                weaponConfig.damageType,
+                out isCritical
+            );
+
+            HealthSystem targetHealth =
+            target.GetComponent<HealthSystem>();
+
+            if (targetHealth != null)
+            {
+                targetHealth.TakeDamage(damage);
+            }
+
+            Debug.Log(
+                $"命中：{target.name}，伤害：{damage:F1}，暴击：{isCritical}"
+            );
         }
     }
 }

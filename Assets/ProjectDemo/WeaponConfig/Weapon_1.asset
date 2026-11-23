@@ -14,16 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponConfig
   weaponName: Weapon_1
   weaponIcon: {fileID: 0}
+  weaponPrefab: {fileID: 0}
   damageType: 0
   stats:
     health: 0
-    attack: 30
+    attack: 20
     magicPower: 0
     armor: 0
     magicResistance: 0
-    armorPenetration: 20
+    armorPenetration: 10
     magicPenetration: 0
     armorPenetrationRate: 2000
     magicPenetrationRate: 0
-    critRate: 50
-    critDamage: 50
+    critRate: 3500
+    critDamage: 5000

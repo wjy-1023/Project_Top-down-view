@@ -17,6 +17,8 @@ public class PlayerControl : MonoBehaviour
     [Header("攻击参数")]
     public Animator animator;
 
+    public WeaponController weaponController;
+
     private CharacterController controller;
 
     void Start()
@@ -133,5 +135,17 @@ public class PlayerControl : MonoBehaviour
     public void CloseComboWindow()
     {
         animator.SetBool("Combo", false);
+    }
+    public void AttackHit()
+    {
+        Debug.Log("动画事件触发：AttackHit");
+
+        if (weaponController == null)
+        {
+            Debug.LogWarning("没有绑定 WeaponController！");
+            return;
+        }
+
+        weaponController.AttackHit();
     }
 }

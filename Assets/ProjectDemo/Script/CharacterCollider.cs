@@ -10,7 +10,6 @@ public class CharacterCollider : MonoBehaviour
 
     void Awake()
     {
-        // 自动获取自身及子物体的所有碰撞体
         if (characterColliders == null || characterColliders.Length == 0)
         {
             characterColliders = GetComponentsInChildren<Collider>();
