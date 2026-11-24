@@ -15,6 +15,16 @@ public class HealthSystem : MonoBehaviour
     public float regenDelay = 3f;       // 受伤后等待时间
     public float regenDuration = 3f;    // 完整回血所需时间
 
+    public GameObject regenEffectPrefab;
+    public Transform regenEffectPoint;
+
+    // 当前生成的特效实例
+    private GameObject regenEffectInstance;
+
+    [Header("受击动画")]
+    public Animator characterAnimator;
+    public Animator healthBarAnimator;
+
     private Coroutine regenCoroutine;
 
     private void Start()
@@ -36,7 +46,7 @@ public class HealthSystem : MonoBehaviour
     }
 
     // 受到伤害
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool isCritical)
     {
         if (currentHealth <= 0)
             return;
@@ -46,6 +56,7 @@ public class HealthSystem : MonoBehaviour
         if (damage <= 0)
             return;
 
+        // 扣除当前血量
         currentHealth = Mathf.Clamp(
             currentHealth - damage,
             0,
@@ -57,12 +68,32 @@ public class HealthSystem : MonoBehaviour
             $"当前生命值：{currentHealth:F1}/{maxHealth:F1}"
         );
 
+        // 更新血条
         if (healthBarUI != null)
         {
             healthBarUI.UpdateHealth(currentHealth, maxHealth);
         }
 
-        // 受到伤害后，重新计算自动回血时间
+        // 触发角色受击动画
+        if (characterAnimator != null)
+        {
+            characterAnimator.SetTrigger("Hurt");
+        }
+
+        // 触发血条受击动画
+        if (healthBarAnimator != null)
+        {
+            if (isCritical)
+            {
+                healthBarAnimator.SetTrigger("Crit");
+            }
+            else
+            {
+                healthBarAnimator.SetTrigger("NoCrit");
+            }
+        }
+
+        // 重新启动自动回血计时
         StartRegenTimer();
     }
 
@@ -72,7 +103,11 @@ public class HealthSystem : MonoBehaviour
         if (regenCoroutine != null)
         {
             StopCoroutine(regenCoroutine);
+            regenCoroutine = null;
         }
+
+        // 如果回血被打断，移除特效
+        RemoveRegenEffect();
 
         regenCoroutine = StartCoroutine(AutoRegen());
     }
@@ -80,7 +115,7 @@ public class HealthSystem : MonoBehaviour
     // 自动回血
     private IEnumerator AutoRegen()
     {
-        // 等待一段时间没有受到伤害
+        // 等待受伤后的间隔时间
         yield return new WaitForSeconds(regenDelay);
 
         if (currentHealth >= maxHealth)
@@ -88,6 +123,9 @@ public class HealthSystem : MonoBehaviour
             regenCoroutine = null;
             yield break;
         }
+
+        // 开始回血，生成特效
+        CreateRegenEffect();
 
         float startHealth = currentHealth;
         float elapsedTime = 0f;
@@ -118,6 +156,7 @@ public class HealthSystem : MonoBehaviour
             yield return null;
         }
 
+        // 确保最终生命值为最大值
         currentHealth = maxHealth;
 
         if (healthBarUI != null)
@@ -127,6 +166,9 @@ public class HealthSystem : MonoBehaviour
                 maxHealth
             );
         }
+
+        // 回血完成，移除特效
+        RemoveRegenEffect();
 
         Debug.Log($"{name} 自动回血完成");
 
@@ -148,6 +190,38 @@ public class HealthSystem : MonoBehaviour
         if (healthBarUI != null)
         {
             healthBarUI.UpdateHealth(currentHealth, maxHealth);
+        }
+    }
+
+    // 生成回血特效
+    private void CreateRegenEffect()
+    {
+        if (regenEffectPrefab == null)
+            return;
+
+        // 防止重复生成
+        if (regenEffectInstance != null)
+            return;
+
+        Transform spawnPoint = regenEffectPoint != null
+            ? regenEffectPoint
+            : transform;
+
+        regenEffectInstance = Instantiate(
+            regenEffectPrefab,
+            spawnPoint.position,
+            spawnPoint.rotation,
+            spawnPoint
+        );
+    }
+
+    // 移除回血特效
+    private void RemoveRegenEffect()
+    {
+        if (regenEffectInstance != null)
+        {
+            Destroy(regenEffectInstance);
+            regenEffectInstance = null;
         }
     }
 }

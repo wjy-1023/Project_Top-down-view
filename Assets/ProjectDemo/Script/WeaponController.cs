@@ -101,7 +101,7 @@ public class WeaponController : MonoBehaviour
 
             if (targetHealth != null)
             {
-                targetHealth.TakeDamage(damage);
+                targetHealth.TakeDamage(damage, isCritical);
             }
 
             Debug.Log(
