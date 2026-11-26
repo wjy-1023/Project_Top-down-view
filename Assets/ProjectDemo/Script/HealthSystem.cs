@@ -25,6 +25,12 @@ public class HealthSystem : MonoBehaviour
     public Animator characterAnimator;
     public Animator healthBarAnimator;
 
+    [Header("受击特效")]
+    public GameObject hitEffectPrefab;
+
+    // 特效生成位置
+    public Transform hitEffectPoint;
+
     private Coroutine regenCoroutine;
 
     private void Start()
@@ -62,6 +68,9 @@ public class HealthSystem : MonoBehaviour
             0,
             maxHealth
         );
+
+        // 生成受击特效
+        CreateHitEffect();
 
         Debug.Log(
             $"{name} 受到 {damage:F1} 点伤害，" +
@@ -223,5 +232,45 @@ public class HealthSystem : MonoBehaviour
             Destroy(regenEffectInstance);
             regenEffectInstance = null;
         }
+    }
+
+    // 生成受击特效
+    private void CreateHitEffect()
+    {
+        if (hitEffectPrefab == null)
+            return;
+
+        Transform spawnPoint = hitEffectPoint != null
+            ? hitEffectPoint
+            : transform;
+
+        GameObject effect = Instantiate(
+            hitEffectPrefab,
+            spawnPoint.position,
+            spawnPoint.rotation
+        );
+
+        // 自动计算粒子播放结束时间
+        ParticleSystem[] particleSystems =
+            effect.GetComponentsInChildren<ParticleSystem>();
+
+        float destroyTime = 0f;
+
+        foreach (ParticleSystem ps in particleSystems)
+        {
+            var main = ps.main;
+
+            float lifetime = main.startLifetime.constantMax;
+
+            float totalTime = main.duration + lifetime;
+
+            destroyTime = Mathf.Max(destroyTime, totalTime);
+        }
+
+        // 防止没有粒子组件时无法销毁
+        if (destroyTime <= 0)
+            destroyTime = 3f;
+
+        Destroy(effect, destroyTime);
     }
 }
